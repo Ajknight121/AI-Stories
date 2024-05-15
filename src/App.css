@@ -1,0 +1,24 @@
+body {
+  /* margin: 0; */
+  
+}
+.page-wrap {
+  display: flex;
+}
+
+.page-focus {
+  background-color: darkgrey;
+  width: 80%;
+  height: 100%;
+  text-align: center;
+}
+
+.page-list {
+  width: 20%;
+  height: 100%;
+  background-color: aqua;
+}
+
+.title {
+  font-size: x-large;
+}

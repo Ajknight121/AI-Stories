@@ -22,3 +22,30 @@ body {
 .title {
   font-size: x-large;
 }
+
+.mode {
+  display: flex;
+  flex-direction: row;
+  float: right;
+  margin-top: 5px;
+}
+button {
+  background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+.mode-button {
+  width: fit-content;
+  height: 30px;
+  padding: 5px 5px 0 5px;
+}
+.selected {
+  background-color: yellow;
+  border: 0 0 5px 0;
+  border-color: blue;
+  border-style: hidden hidden solid hidden;
+}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { IPage } from "../types";
+import { DrawBoard } from "../Drawing";
 
 export const PageFocus = ({page}: {page: IPage}) => {
   const { name, prompt, position, image } = page;
@@ -20,7 +21,8 @@ export const PageFocus = ({page}: {page: IPage}) => {
           <button className={`mode-button ${selected == 2 ? "selected" : ""}`} onClick={() => setSelected(2)}>Draw Image</button>
         </div>
         <div className="canvas">
-          <img src={image} width={"100%"} />
+          <DrawBoard />
+          {/* <img src={image} width={"100%"} /> */}
         </div>
       </div>
     </div>

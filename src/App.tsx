@@ -1,14 +1,14 @@
-import { useState } from 'react'
 import './App.css'
 import king from "./images/king.jpg"
 import { PagePeek } from './components/PagePeek'
 import { PageFocus } from './components/PageFocus'
+import { IPage } from './types'
 
-let page = {
-  title: "Page Title",
+const page: IPage = {
+  name: "Page Title",
   prompt: "This is the users image prompt",
   image: king,
-  order: 1,
+  position: 1,
 }
 
 function App() {

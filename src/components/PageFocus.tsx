@@ -1,14 +1,13 @@
-/* eslint-disable react/prop-types */
-
 import { useState } from "react";
+import { IPage } from "../types";
 
-export const PageFocus = ({ page }) => {
-  let { title, prompt, order, image } = page;
-  let [prompting, setPrompting] = useState("");
-  let [selected, setSelected] = useState(1);
+export const PageFocus = ({page}: {page: IPage}) => {
+  const { name, prompt, position, image } = page;
+  const [prompting, setPrompting] = useState(prompt);
+  const [selected, setSelected] = useState(1);
   return (
     <div className="page-focus">
-      <div className="title">{title}</div>
+      <div className="title">{name}</div>
       <input
         type="text"
         value={prompting}

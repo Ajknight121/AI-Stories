@@ -12,7 +12,6 @@ const page: IPage = {
 }
 
 function App() {
-
   return (
     <div className='page-wrap'>
     <div className='page-list'>

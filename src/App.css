@@ -57,3 +57,8 @@ button {
   height: 90vh;
   background-color: darkgrey;
 }
+
+canvas {
+  position: relative;
+  top: 10px;
+}

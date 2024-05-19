@@ -16,7 +16,7 @@ const getPixelRatio = (context) => {
 
 
 export const DrawingBoard = () => {
-  const {prevCursorX, prevCursorY, currCursorX, currCursorY} = useContext(SiteContext)
+  const {prevCursorX, prevCursorY, currCursorX, currCursorY, mouseDown} = useContext(SiteContext)
   const ref = useRef<HTMLCanvasElement>(null);
 
   const draw = (context, startX, startY, endX, endY) => {
@@ -85,13 +85,15 @@ export const DrawingBoard = () => {
     const adjustedPrevCursorY = prevCursorY - offsetY;
 
     const render = () => {
-      draw(context, adjustedPrevCursorX, adjustedPrevCursorY, adjustedCurrCursorX, adjustedCurrCursorY)
-      animationFrameId = window.requestAnimationFrame(render)
+      if (mouseDown) {
+        draw(context, adjustedPrevCursorX, adjustedPrevCursorY, adjustedCurrCursorX, adjustedCurrCursorY)
+        animationFrameId = window.requestAnimationFrame(render)
+      }
     }
     context.fillStyle = '#FFFFFF'
     context.fillRect(0, 0, context.canvas.width, context.canvas.height)
     render()
-  }, [currCursorX, currCursorY, prevCursorX, prevCursorY]);
+  }, [currCursorX, currCursorY, mouseDown, prevCursorX, prevCursorY]);
 
   return <canvas ref={ref}/>;
 };

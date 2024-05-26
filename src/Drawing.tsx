@@ -15,16 +15,17 @@ const getPixelRatio = (context) => {
 };
 
 
-export const DrawingBoard = () => {
-  const {prevCursorX, prevCursorY, currCursorX, currCursorY, mouseDown} = useContext(SiteContext)
+export const DrawingBoard = ({isHidden}:{isHidden: boolean}) => {
+  const {cursor} = useContext(SiteContext)
+  const {prevCursorX, prevCursorY, currCursorX, currCursorY, mouseDown} = cursor
   const ref = useRef<HTMLCanvasElement>(null);
 
-  const draw = (context, startX, startY, endX, endY) => {
-    let radius = 20
+  const draw = (context, startX:number, startY:number, endX:number, endY:number) => {
+    const radius = 10
     context.fillStyle = '#000000'
     context.lineWidth = 2 * radius
     context.beginPath()
-    context.arc(startX, startY, 20, 0, 2*Math.PI)
+    context.arc(startX, startY, radius, 0, 2*Math.PI)
     context.fill()
     context.closePath()
     context.beginPath();
@@ -33,7 +34,7 @@ export const DrawingBoard = () => {
     context.stroke(); // Stroke the line
 
     context.beginPath()
-    context.arc(endX, endY, 20, 0, 2*Math.PI)
+    context.arc(endX, endY, radius, 0, 2*Math.PI)
     context.fill()
     context.closePath()
   }
@@ -58,18 +59,18 @@ export const DrawingBoard = () => {
     let animationFrameId
 
     const ratio = getPixelRatio(context);
-    const width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
-    const height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
+    const width = parseFloat(getComputedStyle(canvas).getPropertyValue("width"));
+    const height = parseFloat(getComputedStyle(canvas).getPropertyValue("height"));
 
     const parentWidth = canvas.parentElement?.offsetWidth || window.innerWidth;
     const parentHeight = canvas.parentElement?.offsetHeight || window.innerHeight;
 
-    canvas.width = width * ratio;
-    canvas.height = height * ratio;
+    // canvas.width = width * ratio;
+    // canvas.height = height * ratio;
     // canvas.width = 1000;
     // canvas.height = 700;
-    // canvas.width = parentWidth - 20;
-    // canvas.height = parentHeight - 20;
+    canvas.width = parentWidth - 20;
+    canvas.height = parentHeight - 20;
     canvas.style.width = `${parentWidth-20}px`;
     canvas.style.height = `${parentHeight-20}px`;
 
@@ -95,5 +96,5 @@ export const DrawingBoard = () => {
     render()
   }, [currCursorX, currCursorY, mouseDown, prevCursorX, prevCursorY]);
 
-  return <canvas ref={ref}/>;
+  return <canvas ref={ref} className={isHidden ? "hidden" : ""}/>;
 };

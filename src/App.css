@@ -18,8 +18,17 @@ body {
   background-color: aqua;
 }
 
+
 .title {
   font-size: x-large;
+}
+
+input {
+  width: 90%;
+}
+
+.hidden {
+  display: none;
 }
 
 .mode {
@@ -28,6 +37,15 @@ body {
   justify-content: right;
   margin-top: 5px;
   
+}
+
+.peek {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.peek-info {
+  height: 50px;
 }
 button {
   background: none;

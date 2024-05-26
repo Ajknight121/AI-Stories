@@ -1,26 +1,29 @@
 import './App.css'
-import king from "./images/king.jpg"
 import { PagePeek } from './components/PagePeek'
 import { PageFocus } from './components/PageFocus'
-import { IPage } from './types'
+import { useContext } from 'react'
+import { SiteContext } from './siteContext'
 
-const page: IPage = {
-  name: "Page Title",
-  prompt: "This is the users image prompt",
-  image: king,
-  position: 1,
-}
+// import king from "./images/king.jpg"
+// const tpage: IPage = {
+//   name: "Page Title",
+//   prompt: "A viking sits on a large throne",
+//   image: king,
+//   position: 1,
+// }
 
 function App() {
+  const {pages, currentPage} = useContext(SiteContext)
+
   return (
     <div className='page-wrap'>
     <div className='page-list'>
       Page list
-      <PagePeek page={page}/>
-      <PagePeek page={page}/>
-      <PagePeek page={page}/>
+      {pages.map((page,index) => {return <PagePeek key={index} page={page} index={index}/>})}
+      
     </div>
-      <PageFocus page={page}/>
+      {pages && <PageFocus page={pages[currentPage]}/>}
+      
     </div>
   )
 }

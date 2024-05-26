@@ -10,3 +10,11 @@ export interface IPage {
   prompt: string;
   image: string;
 }
+
+
+
+export interface AIres {
+  img: string;
+  prompt: string;
+  seed: number;
+}

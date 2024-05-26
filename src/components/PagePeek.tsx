@@ -1,12 +1,21 @@
-import "./peek.css"
 import { IPage } from "../types"
-export const PagePeek = ({page}: {page: IPage}) => {
+import { useContext } from "react"
+import { SiteContext } from "../siteContext"
+export const PagePeek = ({page, index}: {page: IPage, index:number}) => {
   const {name,prompt, image, position} = page
+  const {setCurrentPage} = useContext(SiteContext)
+
+  const handleSelect = () => {
+    console.log("Swap to page")
+    setCurrentPage(index)
+
+  }
+
   return (
-    <div className='peek'>
+    <div className='peek' onClick={handleSelect}>
       <img src={image} width={"100%"}/>
       <div className='peek-info'>
-        {position}: {name} - {prompt}
+        {index + 1}: {name} - {prompt}
       </div>
     </div>
   )

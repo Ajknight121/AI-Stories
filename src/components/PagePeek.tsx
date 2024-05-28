@@ -1,7 +1,7 @@
 import { IPage } from "../types"
 import { useContext } from "react"
 import { SiteContext } from "../siteContext"
-export const PagePeek = ({page, index}: {page: IPage, index:number}) => {
+export const PagePeek = ({page, index, selected}: {page: IPage, index:number, selected:boolean}) => {
   const {name,prompt, image, position} = page
   const {setCurrentPage} = useContext(SiteContext)
 
@@ -12,11 +12,11 @@ export const PagePeek = ({page, index}: {page: IPage, index:number}) => {
   }
 
   return (
-    <div className='peek' onClick={handleSelect}>
-      <img src={image} width={"100%"}/>
+    <div className={`peek ${selected ? "selected" : ""}`} onClick={handleSelect}>
       <div className='peek-info'>
         {index + 1}: {name} - {prompt}
       </div>
+      <img src={image} width={"100%"}/>
     </div>
   )
 }

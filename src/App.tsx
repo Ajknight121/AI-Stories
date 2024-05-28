@@ -1,8 +1,8 @@
-import './App.css'
-import { PagePeek } from './components/PagePeek'
-import { PageFocus } from './components/PageFocus'
-import { useContext } from 'react'
-import { SiteContext } from './siteContext'
+import "./App.css";
+import { PagePeek } from "./components/PagePeek";
+import { PageFocus } from "./components/PageFocus";
+import { useContext } from "react";
+import { SiteContext } from "./siteContext";
 
 // import king from "./images/king.jpg"
 // const tpage: IPage = {
@@ -13,19 +13,19 @@ import { SiteContext } from './siteContext'
 // }
 
 function App() {
-  const {pages, currentPage} = useContext(SiteContext)
+  const { pages, currentPage } = useContext(SiteContext);
 
   return (
-    <div className='page-wrap'>
-    <div className='page-list'>
-      Page list
-      {pages.map((page,index) => {return <PagePeek key={index} page={page} index={index}/>})}
-      
+    <div className="page-wrap">
+      <div className="page-list">
+        Page list
+        {pages.map((page, index) => {
+          return <PagePeek key={index} page={page} index={index} selected={currentPage == index}/>;
+        })}
+      </div>
+      {pages && <PageFocus page={pages[currentPage]} />}
     </div>
-      {pages && <PageFocus page={pages[currentPage]}/>}
-      
-    </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -24,16 +24,18 @@ export const PageFocus = ({ page }: { page: IPage }) => {
 
   return (
     <div className="page-focus">
-      <div className="title">{name}</div>
-      <form onSubmit={handlePromptSubmit}>
-        <input
-          type="text"
-          value={prompting}
-          onChange={(e) => setPrompting(e.target.value)}
-          placeholder="Enter prompt here"
-        />
-        <input type="submit" />
-      </form>
+      <div className="page-focus-header">
+        <div className="title">{name}</div>
+        <form onSubmit={handlePromptSubmit}>
+          <input
+            type="text"
+            value={prompting}
+            onChange={(e) => setPrompting(e.target.value)}
+            placeholder="Enter prompt here"
+          />
+          <input className="text-button" type="submit" />
+        </form>
+      </div>
       <div className="page">
         <div className="mode">
           <div>
@@ -54,7 +56,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
         </div>
         <div className="canvas">
           <DrawingBoard isHidden={selected != 2}/>
-          <img src={image} width={"100%"} className={selected !=1 ? "hidden" : ""} />
+          <img src={image} height={"100%"} className={selected !=1 ? "hidden" : ""} />
         </div>
       </div>
     </div>

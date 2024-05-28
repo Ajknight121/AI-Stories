@@ -1,21 +1,27 @@
 body {
-  /* margin: 0; */
-  
+  margin: 0;
+  background-color: rgb(255, 234, 208);
+  box-sizing: border-box;
 }
 .page-wrap {
   display: flex;
+  height: 100vh;
 }
 
 .page-focus {
   width: 80%;
   height: 100%;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .page-list {
   width: 20%;
   height: 100%;
-  background-color: aqua;
+  background-color: rgb(189, 139, 156);
+  padding: 5px;
+  box-sizing: border-box;
+  overflow-y: scroll;
 }
 
 
@@ -25,6 +31,19 @@ body {
 
 input {
   width: 90%;
+  height: 40px;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  margin: 0 20px;
+}
+
+.text-button {
+  width: 100px;
+  height: 100%;
 }
 
 .hidden {
@@ -42,6 +61,15 @@ input {
 .peek {
   padding: 5px;
   cursor: pointer;
+  margin: 3px;
+  border-radius: 10px;
+  background-color: rgb(255, 234, 208);
+  border: grey solid 3px
+}
+
+.peek.selected {
+  background-color: rgb(255, 234, 208);
+  border: rgb(55, 119, 255) solid 3px
 }
 
 .peek-info {
@@ -71,8 +99,9 @@ button {
   
 }
 .canvas {
+  overflow: hidden;
   width: 100%;
-  height: 90vh;
+  height: 88.4vh;
   background-color: darkgrey;
 }
 

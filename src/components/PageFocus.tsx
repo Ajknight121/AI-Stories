@@ -56,7 +56,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
         </div>
         <div className="canvas">
           <DrawingBoard isHidden={selected != 2}/>
-          <img src={image} height={"100%"} className={selected !=1 ? "hidden" : ""} />
+          <img src={image} className={selected !=1 ? "hidden" : ""} />
         </div>
       </div>
     </div>

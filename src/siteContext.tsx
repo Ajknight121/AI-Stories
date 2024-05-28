@@ -115,6 +115,7 @@ export default function SiteContextProvider({
 
     const newPage = pages[currentPage] as IPage;
     newPage.image = data.images[0];
+    newPage.prompt = prompt;
     const updatedPages = [...pages];
     updatedPages[currentPage] = newPage;
     setPages(updatedPages);

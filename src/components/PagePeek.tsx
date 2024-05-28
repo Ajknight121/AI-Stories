@@ -14,9 +14,9 @@ export const PagePeek = ({page, index, selected}: {page: IPage, index:number, se
   return (
     <div className={`peek ${selected ? "selected" : ""}`} onClick={handleSelect}>
       <div className='peek-info'>
-        {index + 1}: {name} - {prompt}
+        {index + 1}: {prompt}
       </div>
-      <img src={image} width={"100%"}/>
+      <img src={image}/>
     </div>
   )
 }

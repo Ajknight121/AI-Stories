@@ -41,6 +41,9 @@ export const SiteContext = createContext({
   setCurrentPage: (num: number) => {
     console.log("setCurrentPage ", num);
   },
+  addPage: () => {
+    console.log("addPage ");
+  },
   postPrompt: async (userPrompt: string) => {
     console.log(`Received prompt: ${userPrompt}`);
   },
@@ -120,42 +123,54 @@ export default function SiteContextProvider({
   // Cursor tracking
   useEffect(() => {
     const dispatchMousemove = (e: MouseEvent) => {
-        setCursor((prev) => ({
-           ...prev,
-            prevCursorX: prev.currCursorX,
-            prevCursorY: prev.currCursorY,
-            currCursorX: e.clientX,
-            currCursorY: e.clientY,
-        }));
+      setCursor((prev) => ({
+        ...prev,
+        prevCursorX: prev.currCursorX,
+        prevCursorY: prev.currCursorY,
+        currCursorX: e.clientX,
+        currCursorY: e.clientY,
+      }));
     };
     document.addEventListener("mousemove", dispatchMousemove);
 
-    const dispatchMouseDown = (e: MouseEvent) => {
-        setCursor((prev) => ({
-           ...prev,
-            mouseDown: true,
-        }));
+    const dispatchMouseDown = () => {
+      setCursor((prev) => ({
+        ...prev,
+        mouseDown: true,
+      }));
     };
     document.addEventListener("mousedown", dispatchMouseDown);
 
-    const dispatchMouseUp = (e: MouseEvent) => {
-        setCursor((prev) => ({
-           ...prev,
-            mouseDown: false,
-        }));
+    const dispatchMouseUp = () => {
+      setCursor((prev) => ({
+        ...prev,
+        mouseDown: false,
+      }));
     };
     document.addEventListener("mouseup", dispatchMouseUp);
 
     return () => {
-        document.removeEventListener("mousemove", dispatchMousemove);
-        document.removeEventListener("mousedown", dispatchMouseDown);
-        document.removeEventListener("mouseup", dispatchMouseUp);
+      document.removeEventListener("mousemove", dispatchMousemove);
+      document.removeEventListener("mousedown", dispatchMouseDown);
+      document.removeEventListener("mouseup", dispatchMouseUp);
     };
-}, [cursor]);
+  }, [cursor]);
+
+  const addPage = () => {
+    const pos = currentPage + 1
+    const newPage = {
+      name: "Empty Page",
+      prompt: "",
+      image: "",
+      position: pos,
+    }
+    const updatedPages = [...pages, newPage];
+    setPages(updatedPages);
+  }
 
   return (
     <SiteContext.Provider
-      value={{ cursor, pages, currentPage, setCurrentPage, postPrompt }}
+      value={{ cursor, pages, currentPage, setCurrentPage, postPrompt, addPage }}
     >
       {children}
     </SiteContext.Provider>

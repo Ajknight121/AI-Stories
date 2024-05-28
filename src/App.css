@@ -19,7 +19,7 @@ body {
   width: 20%;
   height: 100%;
   background-color: rgb(189, 139, 156);
-  padding: 5px;
+  padding: 5px 5px 20px 5px;
   box-sizing: border-box;
   overflow-y: scroll;
 }
@@ -44,6 +44,7 @@ form {
 .text-button {
   width: 100px;
   height: 100%;
+  cursor: pointer;
 }
 
 .hidden {
@@ -70,6 +71,16 @@ form {
 .peek.selected {
   background-color: rgb(255, 234, 208);
   border: rgb(55, 119, 255) solid 3px
+}
+
+.add-page {
+  padding: 5px;
+  cursor: pointer;
+  margin: 10px 3px;
+  border-radius: 10px;
+  background-color: rgb(255, 234, 208);
+  border: grey solid 3px;
+  text-align: center;
 }
 
 .peek-info {

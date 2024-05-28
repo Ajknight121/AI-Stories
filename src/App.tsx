@@ -13,7 +13,7 @@ import { SiteContext } from "./siteContext";
 // }
 
 function App() {
-  const { pages, currentPage } = useContext(SiteContext);
+  const { pages, currentPage, addPage } = useContext(SiteContext);
 
   return (
     <div className="page-wrap">
@@ -22,6 +22,9 @@ function App() {
         {pages.map((page, index) => {
           return <PagePeek key={index} page={page} index={index} selected={currentPage == index}/>;
         })}
+        <div className="add-page" onClick={() => addPage()}>
+          Add page
+        </div>
       </div>
       {pages && <PageFocus page={pages[currentPage]} />}
     </div>

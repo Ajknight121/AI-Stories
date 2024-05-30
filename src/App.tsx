@@ -39,7 +39,7 @@ function App() {
       ) : ""}
 
       <div className="editor-wrapper">
-        <div className="title" onClick={() => setFocusView(false)}>{currentBook.title}<br/><span>View all pages</span></div>
+        <div className="title" onClick={() => setFocusView(false)}>{currentBook.title}<br/><span>View all</span></div>
         {focusView && pages ? (
           <PageFocus page={pages[currentPage]} />
         ) : (

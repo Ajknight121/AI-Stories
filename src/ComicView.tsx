@@ -1,7 +1,9 @@
+import { useContext } from "react";
 import { PagePeek } from "./components/PagePeek";
+import { SiteContext } from "./siteContext";
 
 export function ComicView({ pages }: { pages: IPage[] }) {
-
+  const {addPage} = useContext(SiteContext)
 
   return (
     <div className="comic">
@@ -15,6 +17,9 @@ export function ComicView({ pages }: { pages: IPage[] }) {
               />
             );
           })}
+          <div className="add-page" onClick={() => addPage()}>
+            Add page
+          </div>
     </div>
   );
 }

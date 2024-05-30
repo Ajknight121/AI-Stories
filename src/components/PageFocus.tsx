@@ -7,7 +7,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
   const { name, prompt, position, image } = page;
   const [prompting, setPrompting] = useState(prompt);
   const [selected, setSelected] = useState(1);
-  const { cursor, postPrompt } = useContext(SiteContext);
+  const { cursor, postPrompt, pages, currentPage, setCurrentPage } = useContext(SiteContext);
   const { currCursorX, currCursorY } = cursor;
   //TODO save canvas using .toDataURL()
   //TODO load canvas back to screen: https://stackoverflow.com/questions/4773966/drawing-an-image-from-a-data-url-to-a-canvas
@@ -26,11 +26,26 @@ export const PageFocus = ({ page }: { page: IPage }) => {
     setPrompting(prompt)
   }, [prompt])
 
+  const handleBack = () => {
+    if (page == pages[0]) {
+      return;
+    }
+    setCurrentPage(currentPage - 1)
+  }
+  const handleNext = () => {
+    if (page == pages[pages.length - 1]) {
+      return;
+    }
+    setCurrentPage(currentPage + 1)
+  }
+
   return (
     <div className="page-focus">
       <div className="page-focus-header">
         <div className="nav">
-
+          <button onClick={() => handleBack()}>← Prev page</button>
+          <div>page: {currentPage + 1}</div>
+          <button onClick={() => handleNext()}>Next page →</button>
         </div>
         {/* <div className="title">{name}</div> */}
         <form onSubmit={handlePromptSubmit}>

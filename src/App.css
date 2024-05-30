@@ -75,7 +75,11 @@ form {
   width: 100%;
   justify-content: right;
   margin-top: 5px;
-  
+  vertical-align: middle;
+}
+
+.mode > div {
+  margin: 5px;
 }
 
 .peek {
@@ -85,14 +89,13 @@ form {
   cursor: pointer;
   margin: 3px;
   border-radius: 10px;
-  background-color: rgb(255, 234, 208);
+  background-color: white;
   border: grey solid 3px;
   width: 100%;
   overflow-x: scroll;
 }
 
 .peek.selected {
-  background-color: rgb(255, 234, 208);
   border: rgb(55, 119, 255) solid 3px
 }
 
@@ -116,7 +119,7 @@ form {
   cursor: pointer;
   margin: 10px 3px;
   border-radius: 10px;
-  background-color: rgb(255, 234, 208);
+  background-color: white;
   border: grey solid 3px;
   text-align: center;
 }
@@ -139,14 +142,11 @@ button {
   height: 30px;
   padding: 5px 5px 0 5px;
 }
-.selected {
+.mode >.selected {
   background-color: yellow;
   border: 0 0 5px 0;
   border-color: blue;
   border-style: hidden hidden solid hidden;
-}
-.page {
-  
 }
 .canvas {
   /* overflow: hidden; */
@@ -186,4 +186,17 @@ img {
 .peek-wrapper {
   display: flex;
   width: 100%;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.nav > button {
+  background-color: rgb(189, 139, 156);
+  padding: 10px;
+  border-radius: 20px;
 }

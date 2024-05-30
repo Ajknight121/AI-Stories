@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IPage } from "../types";
 import { DrawingBoard } from "../Drawing";
 import { SiteContext } from "../siteContext";
@@ -22,10 +22,17 @@ export const PageFocus = ({ page }: { page: IPage }) => {
     postPrompt(prompting)
   };
 
+  useEffect(() => {
+    setPrompting(prompt)
+  }, [prompt])
+
   return (
     <div className="page-focus">
       <div className="page-focus-header">
-        <div className="title">{name}</div>
+        <div className="nav">
+
+        </div>
+        {/* <div className="title">{name}</div> */}
         <form onSubmit={handlePromptSubmit}>
           <input
             type="text"

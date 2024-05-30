@@ -1,17 +1,17 @@
 import { createContext, useEffect, useState } from "react";
-import { IPage } from "./types";
+import { IBook, IPage } from "./types";
 
-export type SiteContextType = {
-  cursor: {
-    prevCursorX: number;
-    prevCursorY: number;
-    currCursorX: number;
-    currCursorY: number;
-    mouseDown: boolean;
-  };
-  pages: IPage[];
-  postPrompt: (userPrompt: string) => Promise<void>;
-};
+// export type SiteContextType = {
+//   cursor: {
+//     prevCursorX: number;
+//     prevCursorY: number;
+//     currCursorX: number;
+//     currCursorY: number;
+//     mouseDown: boolean;
+//   };
+//   pages: IPage[];
+//   postPrompt: (userPrompt: string) => Promise<void>;
+// };
 
 export interface Cursor {
   currCursorX: number;
@@ -22,12 +22,18 @@ export interface Cursor {
 }
 
 export const SiteContext = createContext({
+  focusView: false,
   cursor: {
     currCursorX: 0,
     currCursorY: 0,
     prevCursorX: 0,
     prevCursorY: 0,
     mouseDown: false,
+  },
+  currentBook: {
+    title:"Book Title",
+    desc:"No description",
+    pages: 0,
   },
   pages: [
     {
@@ -38,6 +44,7 @@ export const SiteContext = createContext({
     },
   ] as IPage[],
   currentPage: 0,
+  setFocusView: (bool: boolean) => {console.log(bool);},
   setCurrentPage: (num: number) => {
     console.log("setCurrentPage ", num);
   },
@@ -54,6 +61,11 @@ export default function SiteContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const [currentBook, setCurrentBook] = useState<IBook>({
+    title:"Book Title",
+    desc:"No description",
+    pages: 0,
+  })
   const [pages, setPages] = useState<IPage[]>([
     {
       name: "Empty Page",
@@ -63,6 +75,7 @@ export default function SiteContextProvider({
     },
   ]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [focusView, setFocusView] = useState(false);
   //Cursor
   const [cursor, setCursor] = useState({
     currCursorX: 0,
@@ -171,7 +184,7 @@ export default function SiteContextProvider({
 
   return (
     <SiteContext.Provider
-      value={{ cursor, pages, currentPage, setCurrentPage, postPrompt, addPage }}
+      value={{ cursor, pages, currentPage, currentBook, focusView, setFocusView, setCurrentPage, postPrompt, addPage }}
     >
       {children}
     </SiteContext.Provider>

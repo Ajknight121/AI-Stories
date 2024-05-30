@@ -1,6 +1,7 @@
 
 export interface IBook {
   title: string;
+  desc: string;
   pages: number;
 }
 
@@ -10,8 +11,6 @@ export interface IPage {
   prompt: string;
   image: string;
 }
-
-
 
 export interface AIres {
   img: string;

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import { SiteContext } from "./siteContext";
+import CanvasDraw from "react-canvas-draw";
 
 const getPixelRatio = (context) => {
   const backingStore =
@@ -97,5 +98,5 @@ export const DrawingBoard = ({isHidden}:{isHidden: boolean}) => {
     render()
   }, [currCursorX, currCursorY, mouseDown, prevCursorX, prevCursorY]);
 
-  return <canvas ref={ref} className={isHidden ? "hidden" : ""}/>;
+  return <CanvasDraw className={isHidden ? "hidden" : ""}/>;
 };

@@ -14,6 +14,7 @@ const getPixelRatio = (context) => {
   return (window.devicePixelRatio || 1) / backingStore;
 };
 
+// AI standard image is 1216 X 832 px
 
 export const DrawingBoard = ({isHidden}:{isHidden: boolean}) => {
   const {cursor} = useContext(SiteContext)

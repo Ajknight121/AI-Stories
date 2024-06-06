@@ -51,6 +51,9 @@ export const SiteContext = createContext({
   addPage: () => {
     console.log("addPage ");
   },
+  updatePages: (page) => {
+    console.log("updatePages ", board);
+  },
   postPrompt: async (userPrompt: string) => {
     console.log(`Received prompt: ${userPrompt}`);
   },
@@ -72,6 +75,7 @@ export default function SiteContextProvider({
       prompt: "",
       image: "",
       position: 1,
+      drawing: "",
     },
   ]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -85,8 +89,23 @@ export default function SiteContextProvider({
     mouseDown: false,
   });
 
+  function saveToLocal() {
+    const book = {meta: currentBook, pages: pages}
+    const bookJSON = JSON.stringify(book)
+    localStorage.setItem("book", bookJSON)
+    // console.log(book.pages[0].drawing)
+  }
+
+  function loadFromLocal() {
+    const bookJSON = localStorage.getItem("book")
+    if (bookJSON != null) {
+      const book = JSON.parse(bookJSON)
+      setCurrentBook(book.meta)
+      setPages(book.pages)
+    }
+  }
+
   useEffect(() => {
-    console.log("Fetching Book");
     async function fetchBook() {
       const response = await fetch(
         `${import.meta.env.VITE_APP_BACKEND_URL}/api/book`
@@ -102,9 +121,18 @@ export default function SiteContextProvider({
       console.log(book.pages);
       setPages(book.pages);
     }
-
-    fetchBook();
+    
+    // console.log("Fetching Book");
+    // fetchBook();
+    loadFromLocal()
   }, []);
+
+  function updatePages(page) {
+    const updatedPages = [...pages];
+    updatedPages[currentPage] = page;
+    setPages(updatedPages);
+    saveToLocal()
+  }
 
   async function postPrompt(prompt: string) {
     const response = await fetch(
@@ -176,6 +204,7 @@ export default function SiteContextProvider({
       name: "Empty Page",
       prompt: "",
       image: "",
+      drawing: "",
       position: pos,
     }
     const updatedPages = [...pages, newPage];
@@ -184,7 +213,7 @@ export default function SiteContextProvider({
 
   return (
     <SiteContext.Provider
-      value={{ cursor, pages, currentPage, currentBook, focusView, setFocusView, setCurrentPage, postPrompt, addPage }}
+      value={{ cursor, pages, currentPage, currentBook, focusView, setFocusView, setCurrentPage, postPrompt, addPage, updatePages }}
     >
       {children}
     </SiteContext.Provider>

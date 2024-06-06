@@ -10,6 +10,7 @@ export interface IPage {
   position: number;
   prompt: string;
   image: string;
+  drawing: string;
 }
 
 export interface AIres {

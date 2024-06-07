@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { IPage } from "../types";
 import { DrawingBoard } from "../Drawing";
 import { SiteContext } from "../siteContext";
+import CanvasDraw from "react-canvas-draw";
 
 export const PageFocus = ({ page }: { page: IPage }) => {
   const { name, prompt, position, image } = page;
@@ -77,10 +78,19 @@ export const PageFocus = ({ page }: { page: IPage }) => {
           </button>
         </div>
         <div className="canvas">
-          <DrawingBoard isHidden={selected != 2}/>
-          <img src={image} className={selected !=1 ? "hidden" : ""} />
+          <div className={`ai-img ${selected != 2 ? "" : "hidden"} `}>
+            <img src={image} className={selected !=1 ? "hidden" : ""} />
+          </div>
+          {/* <DrawingBoard isHidden={selected != 2}/> */}
+          <CanvasDraw className="react-canvas"
+            hideGrid={false}
+            lazyRadius={0}
+            canvasHeight={832}
+            canvasWidth={1216}
+            />
         </div>
       </div>
     </div>
   );
 };
+// AI standard image is 1216 X 832 px

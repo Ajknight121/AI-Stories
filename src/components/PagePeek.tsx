@@ -10,7 +10,7 @@ export const PagePeek = ({
   index: number;
   selected: boolean;
 }) => {
-  const { name, prompt, image, position } = page;
+  const { name, prompt, image, position, drawing, useDrawing } = page;
   const { setCurrentPage,setFocusView } = useContext(SiteContext);
 
   const handleSelect = () => {
@@ -26,7 +26,7 @@ export const PagePeek = ({
         className={`peek ${selected ? "selected" : ""}`}
         onClick={handleSelect}
       >
-        <img src={image} />
+        <img src={useDrawing ? drawing : image} />
         <div className="peek-info">{prompt}</div>
       </div>
     </div>

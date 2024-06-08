@@ -1,14 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { createRef, useContext, useEffect, useRef, useState } from "react";
 import { IPage } from "../types";
 import { DrawingBoard } from "../Drawing";
 import { SiteContext } from "../siteContext";
 import CanvasDraw from "react-canvas-draw";
 
 export const PageFocus = ({ page }: { page: IPage }) => {
-  const { name, prompt, position, image } = page;
+  const { name, prompt, position, image, useDrawing } = page;
   const [prompting, setPrompting] = useState(prompt);
-  const [selected, setSelected] = useState(1);
-  const { cursor, postPrompt, pages, currentPage, setCurrentPage } = useContext(SiteContext);
+  const [selected, setSelected] = useState(useDrawing ? 2 : 1);
+  const { cursor, postPrompt, pages, currentPage, setCurrentPage, updatePage } = useContext(SiteContext);
   const { currCursorX, currCursorY } = cursor;
   //TODO save canvas using .toDataURL()
   //TODO load canvas back to screen: https://stackoverflow.com/questions/4773966/drawing-an-image-from-a-data-url-to-a-canvas
@@ -25,7 +25,8 @@ export const PageFocus = ({ page }: { page: IPage }) => {
 
   useEffect(() => {
     setPrompting(prompt)
-  }, [prompt])
+    setSelected(useDrawing ? 2 : 1)
+  }, [prompt, useDrawing])
 
   const handleBack = () => {
     if (page == pages[0]) {
@@ -38,6 +39,28 @@ export const PageFocus = ({ page }: { page: IPage }) => {
       return;
     }
     setCurrentPage(currentPage + 1)
+  }
+
+  const canvasRef = useRef<CanvasDraw>(null);
+
+  const handleSave = () => {
+    if (canvasRef.current) {
+      const update = {...page, drawing: canvasRef.current.getDataURL()}
+      updatePage(update, currentPage)
+    }
+  }
+
+  const handleMode = (mode: number) => {
+    if (mode == 1) {
+      const update = {...page, useDrawing: false}
+      updatePage(update, currentPage)
+      setSelected(mode)
+    }
+    if (mode == 2) {
+      const update = {...page, useDrawing: true}
+      updatePage(update, currentPage)
+      setSelected(mode)
+    }
   }
 
   return (
@@ -61,18 +84,26 @@ export const PageFocus = ({ page }: { page: IPage }) => {
       </div>
       <div className="page">
         <div className="mode">
+          <button onClick={() => {
+            handleSave()
+            // if (canvasRef.current) {
+            //   localStorage.setItem("savedDrawing", canvasRef.current.getSaveData())
+            // }
+          }}>
+            SAVE CANVAS
+          </button>
           <div>
             Values:{currCursorX ? `${currCursorX}X + ${currCursorY}Y` : "NULL"}
           </div>
           <button
             className={`mode-button ${selected == 1 ? "selected" : ""}`}
-            onClick={() => setSelected(1)}
+            onClick={() => handleMode(1)}
           >
             Propmt AI
           </button>
           <button
             className={`mode-button ${selected == 2 ? "selected" : ""}`}
-            onClick={() => setSelected(2)}
+            onClick={() => handleMode(2)}
           >
             Draw Image
           </button>
@@ -82,7 +113,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
             <img src={image} className={selected !=1 ? "hidden" : ""} />
           </div>
           {/* <DrawingBoard isHidden={selected != 2}/> */}
-          <CanvasDraw className="react-canvas"
+          <CanvasDraw ref={canvasRef} className="react-canvas"
             hideGrid={false}
             lazyRadius={0}
             canvasHeight={832}

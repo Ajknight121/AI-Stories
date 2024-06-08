@@ -9,6 +9,7 @@ export interface IPage {
   name: string;
   position: number;
   prompt: string;
+  useDrawing: boolean;
   image: string;
   drawing: string;
 }

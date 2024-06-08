@@ -51,8 +51,8 @@ export const SiteContext = createContext({
   addPage: () => {
     console.log("addPage ");
   },
-  updatePages: (page) => {
-    console.log("updatePages ", board);
+  updatePage: (page,index) => {
+    console.log("updatePage ", page, index);
   },
   postPrompt: async (userPrompt: string) => {
     console.log(`Received prompt: ${userPrompt}`);
@@ -76,6 +76,7 @@ export default function SiteContextProvider({
       image: "",
       position: 1,
       drawing: "",
+      useDrawing: false,
     },
   ]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -122,14 +123,14 @@ export default function SiteContextProvider({
       setPages(book.pages);
     }
     
-    // console.log("Fetching Book");
-    // fetchBook();
-    loadFromLocal()
+    console.log("Fetching Book");
+    fetchBook();
+    // loadFromLocal()
   }, []);
 
-  function updatePages(page) {
+  function updatePage(page, index) {
     const updatedPages = [...pages];
-    updatedPages[currentPage] = page;
+    updatedPages[index] = page;
     setPages(updatedPages);
     saveToLocal()
   }
@@ -205,6 +206,7 @@ export default function SiteContextProvider({
       prompt: "",
       image: "",
       drawing: "",
+      useDrawing: false,
       position: pos,
     }
     const updatedPages = [...pages, newPage];
@@ -213,7 +215,7 @@ export default function SiteContextProvider({
 
   return (
     <SiteContext.Provider
-      value={{ cursor, pages, currentPage, currentBook, focusView, setFocusView, setCurrentPage, postPrompt, addPage, updatePages }}
+      value={{ cursor, pages, currentPage, currentBook, focusView, setFocusView, setCurrentPage, postPrompt, addPage, updatePage }}
     >
       {children}
     </SiteContext.Provider>

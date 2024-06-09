@@ -43,7 +43,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
       // console.log(test)
       console.log(drawJSON)
     }
-  }, [drawJSON, drawing, prompt, useDrawing])
+  }, [drawJSON, empty, prompt, useDrawing])
 
   const handleBack = () => {
     if (page == pages[0]) {
@@ -74,6 +74,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
       canvasRef.current.clear()
       const update = {...page, drawing: canvasRef.current.getDataURL()}
       updatePage(update, currentPage)
+      canvasRef.current.clear()
     }
   }
 
@@ -111,27 +112,31 @@ export const PageFocus = ({ page }: { page: IPage }) => {
       </div>
       <div className="page">
         <div className="mode">
-          <button onClick={() => handleClear()}>
-            CLEAR CANVAS
-          </button>
-          <button onClick={() => handleSave() }>
-            SAVE CANVAS
-          </button>
-          <div>
-            Values:{currCursorX ? `${currCursorX}X + ${currCursorY}Y` : "NULL"}
+          <div className="canvas-buttons">
+            <button className="canvas-clear" onClick={() => handleClear()}>
+              CLEAR CANVAS
+            </button>
+            <button className="canvas-save" onClick={() => handleSave() }>
+              SAVE CANVAS
+            </button>
           </div>
-          <button
-            className={`mode-button ${selected == 1 ? "selected" : ""}`}
-            onClick={() => handleMode(1)}
-          >
-            Propmt AI
-          </button>
-          <button
-            className={`mode-button ${selected == 2 ? "selected" : ""}`}
-            onClick={() => handleMode(2)}
-          >
-            Draw Image
-          </button>
+          {/* <div>
+            Values:{currCursorX ? `${currCursorX}X + ${currCursorY}Y` : "NULL"}
+          </div> */}
+          <div>
+            <button
+              className={`mode-button ${selected == 1 ? "selected" : ""}`}
+              onClick={() => handleMode(1)}
+            >
+              Propmt AI
+            </button>
+            <button
+              className={`mode-button ${selected == 2 ? "selected" : ""}`}
+              onClick={() => handleMode(2)}
+            >
+              Draw Image
+            </button>
+          </div>
         </div>
         <div className="canvas">
           <div className={`ai-img ${selected != 2 ? "" : "hidden"} `}>
@@ -139,7 +144,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
           </div>
           {/* <DrawingBoard isHidden={selected != 2}/> */}
           <CanvasDraw ref={canvasRef} className="react-canvas"
-            enablePanAndZoom={true}
+            // enablePanAndZoom={true}
             clampLinesToDocument={true}
             hideGrid={false}
             lazyRadius={0}

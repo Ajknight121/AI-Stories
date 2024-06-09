@@ -51,7 +51,7 @@ export const SiteContext = createContext({
   addPage: () => {
     console.log("addPage ");
   },
-  updatePage: (page,index) => {
+  updatePage: (page: IPage,index: number) => {
     console.log("updatePage ", page, index);
   },
   postPrompt: async (userPrompt: string) => {
@@ -76,6 +76,7 @@ export default function SiteContextProvider({
       image: "",
       position: 1,
       drawing: "",
+      drawJSON: "",
       useDrawing: false,
     },
   ]);
@@ -128,7 +129,7 @@ export default function SiteContextProvider({
     // loadFromLocal()
   }, []);
 
-  function updatePage(page, index) {
+  function updatePage(page:IPage, index:number) {
     const updatedPages = [...pages];
     updatedPages[index] = page;
     setPages(updatedPages);
@@ -206,6 +207,7 @@ export default function SiteContextProvider({
       prompt: "",
       image: "",
       drawing: "",
+      drawJSON: "",
       useDrawing: false,
       position: pos,
     }

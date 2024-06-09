@@ -12,6 +12,7 @@ export interface IPage {
   useDrawing: boolean;
   image: string;
   drawing: string;
+  drawJSON: string;
 }
 
 export interface AIres {

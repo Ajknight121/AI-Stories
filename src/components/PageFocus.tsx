@@ -5,13 +5,17 @@ import { SiteContext } from "../siteContext";
 import CanvasDraw from "react-canvas-draw";
 
 export const PageFocus = ({ page }: { page: IPage }) => {
-  const { name, prompt, position, image, useDrawing } = page;
+  const { name, prompt, position, image, drawing, useDrawing, drawJSON } = page;
   const [prompting, setPrompting] = useState(prompt);
   const [selected, setSelected] = useState(useDrawing ? 2 : 1);
   const { cursor, postPrompt, pages, currentPage, setCurrentPage, updatePage } = useContext(SiteContext);
   const { currCursorX, currCursorY } = cursor;
   //TODO save canvas using .toDataURL()
   //TODO load canvas back to screen: https://stackoverflow.com/questions/4773966/drawing-an-image-from-a-data-url-to-a-canvas
+
+  const canvasWidth = 1216
+  const canvasHeight = 832
+  const empty = JSON.stringify({"lines":[],"width":canvasWidth,"height":canvasHeight})
 
   const handlePromptSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,9 +28,22 @@ export const PageFocus = ({ page }: { page: IPage }) => {
   };
 
   useEffect(() => {
+    console.log("EFFECTING")
     setPrompting(prompt)
     setSelected(useDrawing ? 2 : 1)
-  }, [prompt, useDrawing])
+    if (canvasRef.current) {
+      console.log("loading")
+      canvasRef.current.clear()
+      if (drawJSON == "") {
+        canvasRef.current.loadSaveData(empty, true);
+      } else {
+        canvasRef.current.loadSaveData(drawJSON, true);
+      }
+      // let test = canvasRef.current.getSaveData()
+      // console.log(test)
+      console.log(drawJSON)
+    }
+  }, [drawJSON, drawing, prompt, useDrawing])
 
   const handleBack = () => {
     if (page == pages[0]) {
@@ -45,6 +62,16 @@ export const PageFocus = ({ page }: { page: IPage }) => {
 
   const handleSave = () => {
     if (canvasRef.current) {
+      console.log("saving")
+      const update = {...page, drawing: canvasRef.current.getDataURL(), drawJSON: canvasRef.current.getSaveData()}
+      updatePage(update, currentPage)
+      console.log(canvasRef.current.getSaveData())
+    }
+  }
+
+  const handleClear = () => {
+    if (canvasRef.current) {
+      canvasRef.current.clear()
       const update = {...page, drawing: canvasRef.current.getDataURL()}
       updatePage(update, currentPage)
     }
@@ -84,12 +111,10 @@ export const PageFocus = ({ page }: { page: IPage }) => {
       </div>
       <div className="page">
         <div className="mode">
-          <button onClick={() => {
-            handleSave()
-            // if (canvasRef.current) {
-            //   localStorage.setItem("savedDrawing", canvasRef.current.getSaveData())
-            // }
-          }}>
+          <button onClick={() => handleClear()}>
+            CLEAR CANVAS
+          </button>
+          <button onClick={() => handleSave() }>
             SAVE CANVAS
           </button>
           <div>
@@ -114,10 +139,15 @@ export const PageFocus = ({ page }: { page: IPage }) => {
           </div>
           {/* <DrawingBoard isHidden={selected != 2}/> */}
           <CanvasDraw ref={canvasRef} className="react-canvas"
+            enablePanAndZoom={true}
+            clampLinesToDocument={true}
             hideGrid={false}
             lazyRadius={0}
-            canvasHeight={832}
-            canvasWidth={1216}
+            canvasHeight={canvasHeight}
+            canvasWidth={canvasWidth}
+            saveData={drawJSON != "" ? drawJSON : empty}
+            // loadTimeOffset={3} // requires disabling canvas during playback
+            immediateLoading={true}
             />
         </div>
       </div>

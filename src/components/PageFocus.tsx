@@ -96,7 +96,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
       <div className="page-focus-header">
         <div className="nav">
           <button onClick={() => handleBack()}>← Prev page</button>
-          <div>page: {currentPage + 1}</div>
+          <h3>page: {currentPage + 1}</h3>
           <button onClick={() => handleNext()}>Next page →</button>
         </div>
         {/* <div className="title">{name}</div> */}
@@ -123,19 +123,19 @@ export const PageFocus = ({ page }: { page: IPage }) => {
           {/* <div>
             Values:{currCursorX ? `${currCursorX}X + ${currCursorY}Y` : "NULL"}
           </div> */}
-          <div>
-            <button
+          <div className="mode-selectors">
+            <div
               className={`mode-button ${selected == 1 ? "selected" : ""}`}
               onClick={() => handleMode(1)}
             >
               Propmt AI
-            </button>
-            <button
+            </div>
+            <div
               className={`mode-button ${selected == 2 ? "selected" : ""}`}
               onClick={() => handleMode(2)}
             >
               Draw Image
-            </button>
+            </div>
           </div>
         </div>
         <div className="canvas">

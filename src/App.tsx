@@ -1,22 +1,24 @@
 import "./App.css";
 import { PagePeek } from "./components/PagePeek";
 import { PageFocus } from "./components/PageFocus";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { SiteContext } from "./siteContext";
 import { ComicView } from "./ComicView";
 
-// import king from "./images/king.jpg"
-// const tpage: IPage = {
-//   name: "Page Title",
-//   prompt: "A viking sits on a large throne",
-//   image: king,
-//   position: 1,
-// }
 
 function App() {
-  const { pages, currentBook, currentPage, addPage, focusView, setFocusView } =
-    useContext(SiteContext);
+  const { pages, currentBook, currentPage, addPage, focusView, setFocusView, setCurrentBook } = useContext(SiteContext);
+  const [temptitle, setTempTitle] = useState(currentBook.title)
+  const [editTitle, setEditTitle] = useState(false)
 
+  const handleEdit = () => {
+    if (editTitle) {
+      setCurrentBook( (prev) => ({...prev, title: temptitle}))
+      setEditTitle(false)
+    } else {
+      setEditTitle(true)
+    }
+  }
   return (
     <div className="page-wrap">
       {focusView ? (
@@ -39,7 +41,16 @@ function App() {
       ) : ""}
 
       <div className="editor-wrapper">
-        <div className="title" onClick={() => setFocusView(false)}>{currentBook.title}<br/><span>View all</span></div>
+        <div className="title">
+          <input className={`title-name ${editTitle ? "" : "hidden"}`} value={temptitle} onChange={(e) => setTempTitle(e.target.value)}/>
+          <div className={`title-set ${editTitle ? "hidden" : ""}`}>{currentBook.title}</div>
+          
+          <button className="header-button" onClick={() => handleEdit()}>
+            {editTitle ? "save title" : "edit title"}
+          </button>
+          <br/>
+          <button className="header-button" onClick={() => setFocusView(false)}>View all pages</button>
+        </div>
         {focusView && pages ? (
           <PageFocus page={pages[currentPage]} />
         ) : (

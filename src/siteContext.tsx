@@ -65,7 +65,7 @@ export default function SiteContextProvider({
   children: React.ReactNode;
 }) {
   const [currentBook, setCurrentBook] = useState<IBook>({
-    title:"Book Title",
+    title:"Story Title",
     desc:"No description",
     pages: 0,
   })
@@ -217,7 +217,7 @@ export default function SiteContextProvider({
 
   return (
     <SiteContext.Provider
-      value={{ cursor, pages, currentPage, currentBook, focusView, setFocusView, setCurrentPage, postPrompt, addPage, updatePage }}
+      value={{ cursor, pages, currentPage, currentBook, focusView, setCurrentBook, setFocusView, setCurrentPage, postPrompt, addPage, updatePage }}
     >
       {children}
     </SiteContext.Provider>

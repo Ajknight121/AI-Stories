@@ -187,6 +187,20 @@ export default function SiteContextProvider({
         setAwaiting(false);
         return;
       }
+
+      console.log("ai image created");
+      const data = await response.json();
+      console.log(data);
+
+      const newPage = pages[currentPage] as IPage;
+      newPage.image = data.images[0];
+      newPage.prompt = prompt;
+      const updatedPages = [...pages];
+      updatedPages[currentPage] = newPage;
+      setPages(updatedPages);
+      saveToLocal(currentBook, updatedPages);
+      setAwaiting(false);
+      
     } catch (error) {
       console.error("Failed to connect to server");
       setAwaitMsg("Failed to connect to server \n Check connection");
@@ -194,19 +208,6 @@ export default function SiteContextProvider({
       setAwaiting(false);
       return;
     }
-
-    console.log("ai image created");
-    const data = await response.json();
-    console.log(data);
-
-    const newPage = pages[currentPage] as IPage;
-    newPage.image = data.images[0];
-    newPage.prompt = prompt;
-    const updatedPages = [...pages];
-    updatedPages[currentPage] = newPage;
-    setPages(updatedPages);
-    saveToLocal(currentBook, updatedPages);
-    setAwaiting(false);
   }
 
   // Cursor tracking

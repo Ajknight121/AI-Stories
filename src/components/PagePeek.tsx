@@ -21,7 +21,7 @@ export const PagePeek = ({
 
   return (
     <div className="peek-wrapper">
-      {index + 1}
+      <b>{index + 1}</b>
       <div
         className={`peek ${selected ? "selected" : ""}`}
         onClick={handleSelect}

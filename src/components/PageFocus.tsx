@@ -5,10 +5,13 @@ import { SiteContext } from "../siteContext";
 import CanvasDraw from "react-canvas-draw";
 
 export const PageFocus = ({ page }: { page: IPage }) => {
+  if (!page) {
+    return <div></div>
+  }
   const { name, prompt, position, image, drawing, useDrawing, drawJSON } = page;
   const [prompting, setPrompting] = useState(prompt);
-  const [selected, setSelected] = useState(useDrawing ? 2 : 1);
-  const { cursor, postPrompt, pages, currentPage, setCurrentPage, updatePage } = useContext(SiteContext);
+  const [selectedMode, setSelectedMode] = useState(useDrawing ? 2 : 1);
+  const { cursor, setFocusView, postPrompt, pages, currentPage, setCurrentPage, updatePage, deletePage } = useContext(SiteContext);
   const { currCursorX, currCursorY } = cursor;
   //TODO save canvas using .toDataURL()
   //TODO load canvas back to screen: https://stackoverflow.com/questions/4773966/drawing-an-image-from-a-data-url-to-a-canvas
@@ -16,6 +19,11 @@ export const PageFocus = ({ page }: { page: IPage }) => {
   const canvasWidth = 1216
   const canvasHeight = 832
   const empty = JSON.stringify({"lines":[],"width":canvasWidth,"height":canvasHeight})
+
+  const handleText = (text:string) => {
+    setPrompting(text)
+    updatePage({...page, prompt: text}, currentPage)
+  }
 
   const handlePromptSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,20 +36,17 @@ export const PageFocus = ({ page }: { page: IPage }) => {
   };
 
   useEffect(() => {
-    console.log("EFFECTING")
+    console.log("EFFECTING canvas")
     setPrompting(prompt)
-    setSelected(useDrawing ? 2 : 1)
+    setSelectedMode(useDrawing ? 2 : 1)
     if (canvasRef.current) {
-      console.log("loading")
+      console.log("loading canvas")
       canvasRef.current.clear()
       if (drawJSON == "") {
         canvasRef.current.loadSaveData(empty, true);
       } else {
         canvasRef.current.loadSaveData(drawJSON, true);
       }
-      // let test = canvasRef.current.getSaveData()
-      // console.log(test)
-      console.log(drawJSON)
     }
   }, [drawJSON, empty, prompt, useDrawing])
 
@@ -63,16 +68,17 @@ export const PageFocus = ({ page }: { page: IPage }) => {
   const handleSave = () => {
     if (canvasRef.current) {
       console.log("saving")
-      const update = {...page, drawing: canvasRef.current.getDataURL(), drawJSON: canvasRef.current.getSaveData()}
+      console.log(canvasRef.current.getDataURL())
+      const update = {...page,name:"Drawn", drawing: canvasRef.current.getDataURL(), drawJSON: canvasRef.current.getSaveData()}
       updatePage(update, currentPage)
-      console.log(canvasRef.current.getSaveData())
+      console.log(pages[1])
     }
   }
 
   const handleClear = () => {
     if (canvasRef.current) {
       canvasRef.current.clear()
-      const update = {...page, drawing: canvasRef.current.getDataURL()}
+      const update = {...page, drawing: canvasRef.current.getDataURL(), drawJSON: ""}
       updatePage(update, currentPage)
       canvasRef.current.clear()
     }
@@ -82,37 +88,49 @@ export const PageFocus = ({ page }: { page: IPage }) => {
     if (mode == 1) {
       const update = {...page, useDrawing: false}
       updatePage(update, currentPage)
-      setSelected(mode)
+      setSelectedMode(mode)
     }
     if (mode == 2) {
       const update = {...page, useDrawing: true}
       updatePage(update, currentPage)
-      setSelected(mode)
+      setSelectedMode(mode)
     }
   }
+
+  const handlePageDelete = () => {
+    deletePage(currentPage)
+  }
+
+  
 
   return (
     <div className="page-focus">
       <div className="page-focus-header">
         <div className="nav">
           <button onClick={() => handleBack()}>← Prev page</button>
-          <h3>page: {currentPage + 1}</h3>
+          <div className="column">
+            <b>page: {currentPage + 1}</b>
+            <button className="header-button" onClick={() => setFocusView(false)}>View all pages</button>
+          </div>
           <button onClick={() => handleNext()}>Next page →</button>
         </div>
         {/* <div className="title">{name}</div> */}
-        <form onSubmit={handlePromptSubmit}>
-          <input
-            type="text"
-            value={prompting}
-            onChange={(e) => setPrompting(e.target.value)}
-            placeholder="Enter prompt here"
-          />
-          <input className="text-button" type="submit" />
-        </form>
+        <input
+          type="text"
+          value={prompting}
+          onChange={(e) => handleText(e.target.value)}
+          placeholder="What happened?"
+          className="story-input"
+        />
       </div>
       <div className="page">
         <div className="mode">
-          <div className="canvas-buttons">
+          {selectedMode == 1 ? (
+            <form onSubmit={handlePromptSubmit}>
+            <input className="ai-submit" type="submit" value={"Ask AI to draw your image"}/>
+          </form>
+          ) : (
+            <div className="canvas-buttons">
             <button className="canvas-clear" onClick={() => handleClear()}>
               CLEAR CANVAS
             </button>
@@ -120,18 +138,25 @@ export const PageFocus = ({ page }: { page: IPage }) => {
               SAVE CANVAS
             </button>
           </div>
+          )}
+
+          <button className="delete-page" onClick={() => handlePageDelete()}>
+            Delete this page
+          </button>
+          
+          
           {/* <div>
             Values:{currCursorX ? `${currCursorX}X + ${currCursorY}Y` : "NULL"}
           </div> */}
           <div className="mode-selectors">
             <div
-              className={`mode-button ${selected == 1 ? "selected" : ""}`}
+              className={`mode-button ${selectedMode == 1 ? "selected" : ""}`}
               onClick={() => handleMode(1)}
             >
               Propmt AI
             </div>
             <div
-              className={`mode-button ${selected == 2 ? "selected" : ""}`}
+              className={`mode-button ${selectedMode == 2 ? "selected" : ""}`}
               onClick={() => handleMode(2)}
             >
               Draw Image
@@ -139,8 +164,8 @@ export const PageFocus = ({ page }: { page: IPage }) => {
           </div>
         </div>
         <div className="canvas">
-          <div className={`ai-img ${selected != 2 ? "" : "hidden"} `}>
-            <img src={image} className={selected !=1 ? "hidden" : ""} />
+          <div className={`ai-img ${selectedMode != 2 ? "" : "hidden"} `}>
+            <img src={image} className={selectedMode !=1 ? "hidden" : ""} />
           </div>
           {/* <DrawingBoard isHidden={selected != 2}/> */}
           <CanvasDraw ref={canvasRef} className="react-canvas"

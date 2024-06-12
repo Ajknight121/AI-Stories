@@ -31,8 +31,8 @@ export const SiteContext = createContext({
     mouseDown: false,
   },
   currentBook: {
-    title:"Book Title",
-    desc:"No description",
+    title: "Book Title",
+    desc: "No description",
     pages: 0,
   },
   pages: [
@@ -44,14 +44,19 @@ export const SiteContext = createContext({
     },
   ] as IPage[],
   currentPage: 0,
-  setFocusView: (bool: boolean) => {console.log(bool);},
+  setFocusView: (bool: boolean) => {
+    console.log(bool);
+  },
   setCurrentPage: (num: number) => {
     console.log("setCurrentPage ", num);
   },
   addPage: () => {
     console.log("addPage ");
   },
-  updatePage: (page: IPage,index: number) => {
+  updateBook: (book: IBook) => {
+    console.log("updateBook", book);
+  },
+  updatePage: (page: IPage, index: number) => {
     console.log("updatePage ", page, index);
   },
   postPrompt: async (userPrompt: string) => {
@@ -65,10 +70,10 @@ export default function SiteContextProvider({
   children: React.ReactNode;
 }) {
   const [currentBook, setCurrentBook] = useState<IBook>({
-    title:"Story Title",
-    desc:"No description",
+    title: "Story Title",
+    desc: "No description",
     pages: 0,
-  })
+  });
   const [pages, setPages] = useState<IPage[]>([
     {
       name: "Empty Page",
@@ -91,24 +96,31 @@ export default function SiteContextProvider({
     mouseDown: false,
   });
 
-  function saveToLocal() {
-    const book = {meta: currentBook, pages: pages}
-    const bookJSON = JSON.stringify(book)
-    localStorage.setItem("book", bookJSON)
-    // console.log(book.pages[0].drawing)
+  function saveToLocal(currbook, pages) {
+    console.log("saving local");
+    const book = { meta: currbook, pages: pages };
+    const bookJSON = JSON.stringify(book);
+    localStorage.setItem("book", bookJSON);
+    // console.log(bookJSON)
   }
 
   function loadFromLocal() {
-    const bookJSON = localStorage.getItem("book")
-    if (bookJSON != null) {
-      const book = JSON.parse(bookJSON)
-      setCurrentBook(book.meta)
-      setPages(book.pages)
+    const bookJSON = localStorage.getItem("book");
+    if (bookJSON != null || bookJSON == "{}") {
+      console.log("loading local save");
+      const book = JSON.parse(bookJSON);
+      setCurrentBook(book.meta);
+      setPages(book.pages);
     }
   }
 
   useEffect(() => {
-    async function fetchBook() {
+    async function fetchBook(local: boolean) {
+      if (local) {
+        loadFromLocal();
+        return;
+      }
+      console.log("Fetching Book");
       const response = await fetch(
         `${import.meta.env.VITE_APP_BACKEND_URL}/api/book`
       );
@@ -123,17 +135,24 @@ export default function SiteContextProvider({
       console.log(book.pages);
       setPages(book.pages);
     }
-    
-    console.log("Fetching Book");
-    fetchBook();
-    // loadFromLocal()
+
+    fetchBook(true);
   }, []);
 
-  function updatePage(page:IPage, index:number) {
+  function updateBook(book: IBook) {
+    setCurrentBook(book);
+    saveToLocal(book, pages);
+  }
+
+  function updatePage(page: IPage, index: number) {
     const updatedPages = [...pages];
     updatedPages[index] = page;
+    console.log("test up");
+    console.log(pages);
     setPages(updatedPages);
-    saveToLocal()
+    console.log(pages);
+    // console.log(updatedPages)
+    saveToLocal(currentBook, updatedPages);
   }
 
   async function postPrompt(prompt: string) {
@@ -162,6 +181,7 @@ export default function SiteContextProvider({
     const updatedPages = [...pages];
     updatedPages[currentPage] = newPage;
     setPages(updatedPages);
+    saveToLocal(currentBook, updatedPages);
   }
 
   // Cursor tracking
@@ -201,7 +221,7 @@ export default function SiteContextProvider({
   }, [cursor]);
 
   const addPage = () => {
-    const pos = currentPage + 1
+    const pos = currentPage + 1;
     const newPage = {
       name: "Empty Page",
       prompt: "",
@@ -210,14 +230,58 @@ export default function SiteContextProvider({
       drawJSON: "",
       useDrawing: false,
       position: pos,
-    }
+    };
     const updatedPages = [...pages, newPage];
     setPages(updatedPages);
-  }
+    saveToLocal(currentBook, updatedPages);
+  };
 
+  function deletePage(index: number) {
+    const updatedPages = [...pages];
+    if (index >= 0 && index < updatedPages.length) {
+      updatedPages.splice(index, 1);
+
+      // Check if the deleted page was the last one
+      if (updatedPages.length === 0) {
+        const newPos = currentPage + 1;
+        const newPage = {
+          name: "Empty Page",
+          prompt: "",
+          image: "",
+          drawing: "",
+          drawJSON: "",
+          useDrawing: false,
+          position: newPos,
+        };
+        updatedPages.push(newPage);
+        setCurrentPage(0);
+      } else {
+        console.log("reset");
+        setCurrentPage(currentPage - 1);
+      }
+
+      console.log("delete page", currentPage);
+
+      setPages(updatedPages);
+      saveToLocal(currentBook, updatedPages);
+    }
+  }
   return (
     <SiteContext.Provider
-      value={{ cursor, pages, currentPage, currentBook, focusView, setCurrentBook, setFocusView, setCurrentPage, postPrompt, addPage, updatePage }}
+      value={{
+        cursor,
+        pages,
+        currentPage,
+        currentBook,
+        focusView,
+        updateBook,
+        setFocusView,
+        setCurrentPage,
+        postPrompt,
+        addPage,
+        deletePage,
+        updatePage,
+      }}
     >
       {children}
     </SiteContext.Provider>

@@ -3,26 +3,9 @@
 
 ## Setup
 
-This project uses react-canvas-draw which uses an outdated react version so `--force` is required for npm install
+The react side of this project uses react-canvas-draw which uses an outdated react version so `--force` is required for npm install
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. Run `npm install` in application root and in the server directory
+2. set the server's port and freepik api key in env
+3. set the react application's env for backend url to the servers url with port Ex: `http://localhost:5000`
+4. Run `npm run dev` on terminals for the react application and from the server directory

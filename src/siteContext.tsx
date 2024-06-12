@@ -44,6 +44,7 @@ export const SiteContext = createContext({
     },
   ] as IPage[],
   currentPage: 0,
+  awaiting: false,
   setFocusView: (bool: boolean) => {
     console.log(bool);
   },
@@ -52,6 +53,9 @@ export const SiteContext = createContext({
   },
   addPage: () => {
     console.log("addPage ");
+  },
+  deletePage: (index: number) => {
+    console.log(`Delete page: ${index}`);
   },
   updateBook: (book: IBook) => {
     console.log("updateBook", book);
@@ -87,6 +91,8 @@ export default function SiteContextProvider({
   ]);
   const [currentPage, setCurrentPage] = useState(0);
   const [focusView, setFocusView] = useState(false);
+  const [awaiting, setAwaiting] = useState(false);
+  const [awaitMsg, setAwaitMsg] = useState("Please Wait");
   //Cursor
   const [cursor, setCursor] = useState({
     currCursorX: 0,
@@ -96,7 +102,7 @@ export default function SiteContextProvider({
     mouseDown: false,
   });
 
-  function saveToLocal(currbook, pages) {
+  function saveToLocal(currbook: IBook, pages: IPage[]) {
     console.log("saving local");
     const book = { meta: currbook, pages: pages };
     const bookJSON = JSON.stringify(book);
@@ -155,22 +161,40 @@ export default function SiteContextProvider({
     saveToLocal(currentBook, updatedPages);
   }
 
-  async function postPrompt(prompt: string) {
-    const response = await fetch(
-      `${import.meta.env.VITE_APP_BACKEND_URL}/api/ai`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prompt }),
-      }
-    );
+  function delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
-    if (!response.ok) {
-      console.error("Failed to create image");
+  async function postPrompt(prompt: string) {
+    setAwaiting(true);
+    setAwaitMsg("Generating image");
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/api/ai`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Failed to create image");
+        setAwaitMsg("Failed to create image \n Check connection");
+        await delay(1000); // Wait for 1 second
+        setAwaiting(false);
+        return;
+      }
+    } catch (error) {
+      console.error("Failed to connect to server");
+      setAwaitMsg("Failed to connect to server \n Check connection");
+      await delay(1000); // Wait for 1 second
+      setAwaiting(false);
       return;
     }
+
     console.log("ai image created");
     const data = await response.json();
     console.log(data);
@@ -182,6 +206,7 @@ export default function SiteContextProvider({
     updatedPages[currentPage] = newPage;
     setPages(updatedPages);
     saveToLocal(currentBook, updatedPages);
+    setAwaiting(false);
   }
 
   // Cursor tracking
@@ -274,6 +299,8 @@ export default function SiteContextProvider({
         currentPage,
         currentBook,
         focusView,
+        awaiting,
+        awaitMsg,
         updateBook,
         setFocusView,
         setCurrentPage,

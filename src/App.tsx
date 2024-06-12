@@ -1,13 +1,13 @@
 import "./App.css";
 import { PagePeek } from "./components/PagePeek";
 import { PageFocus } from "./components/PageFocus";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { SiteContext } from "./siteContext";
 import { ComicView } from "./ComicView";
 
 
 function App() {
-  const { pages, currentBook, currentPage, addPage, focusView, setFocusView, updateBook, setCurrentPage } = useContext(SiteContext);
+  const { pages, currentBook, currentPage, addPage, focusView, updateBook, awaiting, awaitMsg } = useContext(SiteContext);
   const [temptitle, setTempTitle] = useState(currentBook.title)
   const [editTitle, setEditTitle] = useState(false)
 
@@ -23,6 +23,9 @@ function App() {
 
   return (
     <div className="page-wrap">
+      {awaiting ? (
+        <div className="overlay"><h1>{awaitMsg}</h1></div>
+        ) : "" }
       {focusView ? (
         <div className="page-list">
           <b>Page list</b>

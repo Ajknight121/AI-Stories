@@ -3,6 +3,18 @@ body {
   background-color: rgb(255, 234, 208);
   box-sizing: border-box;
 }
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(173, 216, 230, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 100;
+}
 .page-wrap {
   display: flex;
   height: 100vh;

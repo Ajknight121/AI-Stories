@@ -1,27 +1,46 @@
 import "./App.css";
 import { PagePeek } from "./components/PagePeek";
 import { PageFocus } from "./components/PageFocus";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { SiteContext } from "./siteContext";
 import { ComicView } from "./ComicView";
 
-// import king from "./images/king.jpg"
-// const tpage: IPage = {
-//   name: "Page Title",
-//   prompt: "A viking sits on a large throne",
-//   image: king,
-//   position: 1,
-// }
-
 function App() {
-  const { pages, currentBook, currentPage, addPage, focusView, setFocusView } =
-    useContext(SiteContext);
+  const {
+    pages,
+    currentBook,
+    currentPage,
+    addPage,
+    focusView,
+    updateBook,
+    awaiting,
+    awaitMsg,
+  } = useContext(SiteContext);
+  const [temptitle, setTempTitle] = useState(currentBook.title);
+  const [editTitle, setEditTitle] = useState(false);
+
+  const handleEdit = () => {
+    if (editTitle) {
+      updateBook({ ...currentBook, title: temptitle });
+      // setCurrentBook( (prev) => ({...prev, title: temptitle}))
+      setEditTitle(false);
+    } else {
+      setEditTitle(true);
+    }
+  };
 
   return (
     <div className="page-wrap">
+      {awaiting ? (
+        <div className="overlay">
+          <h1>{awaitMsg}</h1>
+        </div>
+      ) : (
+        ""
+      )}
       {focusView ? (
         <div className="page-list">
-          Page list
+          <b>Page list</b>
           {pages.map((page, index) => {
             return (
               <PagePeek
@@ -36,10 +55,25 @@ function App() {
             Add page
           </div>
         </div>
-      ) : ""}
+      ) : (
+        ""
+      )}
 
       <div className="editor-wrapper">
-        <div className="title" onClick={() => setFocusView(false)}>{currentBook.title}<br/><span>View all</span></div>
+        <div className="title">
+          <input
+            className={`title-name ${editTitle ? "" : "hidden"}`}
+            value={temptitle}
+            onChange={(e) => setTempTitle(e.target.value)}
+          />
+          <div className={`title-set ${editTitle ? "hidden" : ""}`}>
+            {currentBook.title}
+          </div>
+
+          <button className="header-button" onClick={() => handleEdit()}>
+            {editTitle ? "save title" : "edit title"}
+          </button>
+        </div>
         {focusView && pages ? (
           <PageFocus page={pages[currentPage]} />
         ) : (

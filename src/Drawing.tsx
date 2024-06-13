@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import { SiteContext } from "./siteContext";
+import CanvasDraw from "react-canvas-draw";
 
 const getPixelRatio = (context) => {
   const backingStore =
@@ -14,6 +15,7 @@ const getPixelRatio = (context) => {
   return (window.devicePixelRatio || 1) / backingStore;
 };
 
+// AI standard image is 1216 X 832 px
 
 export const DrawingBoard = ({isHidden}:{isHidden: boolean}) => {
   const {cursor} = useContext(SiteContext)
@@ -96,5 +98,5 @@ export const DrawingBoard = ({isHidden}:{isHidden: boolean}) => {
     render()
   }, [currCursorX, currCursorY, mouseDown, prevCursorX, prevCursorY]);
 
-  return <canvas ref={ref} className={isHidden ? "hidden" : ""}/>;
+  return <CanvasDraw className={isHidden ? "hidden" : ""}/>;
 };

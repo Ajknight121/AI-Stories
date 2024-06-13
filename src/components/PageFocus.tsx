@@ -1,8 +1,12 @@
+import "regenerator-runtime/runtime";
 import { SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { IPage } from "../types";
 import { SiteContext } from "../siteContext";
 import CanvasDraw from "react-canvas-draw";
-import { SketchPicker } from "react-color"; // Import the color picker
+import { SketchPicker } from "react-color";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 export const PageFocus = ({ page }: { page: IPage }) => {
   const { prompt, image, useDrawing, drawJSON } = page;
@@ -18,8 +22,31 @@ export const PageFocus = ({ page }: { page: IPage }) => {
     deletePage,
   } = useContext(SiteContext);
 
+  const { transcript, resetTranscript } = useSpeechRecognition();
+  const [isListening, setIsListening] = useState(false);
+  const microphoneRef = useRef(null);
+
+  const handleListing = () => {
+    setIsListening(true);
+    microphoneRef.current.classList.add("listening");
+    SpeechRecognition.startListening({
+      continuous: true,
+    });
+  };
+  const stopHandle = () => {
+    setIsListening(false);
+    microphoneRef.current.classList.remove("listening");
+    SpeechRecognition.stopListening();
+    handleText(prompting + transcript);
+    resetTranscript("");
+  };
+  const handleReset = () => {
+    setIsListening(false);
+    resetTranscript();
+  };
+
   const canvasWidth = 1216;
-  const canvasHeight = 832;
+  const canvasHeight = 630;
   const empty = JSON.stringify({
     lines: [],
     width: canvasWidth,
@@ -28,7 +55,6 @@ export const PageFocus = ({ page }: { page: IPage }) => {
 
   // State to hold the selected color
   const [color, setColor] = useState("#444"); // Default color
-
   const [sliderValue, setSliderValue] = useState(10); // Initialize slider to a default value
   const [showColor, setShowColor] = useState(false);
   // Function to handle color change
@@ -38,7 +64,6 @@ export const PageFocus = ({ page }: { page: IPage }) => {
 
   const handleSliderChange = (newValue: string) => {
     setSliderValue(parseInt(newValue)); // Update the slider value state
-    // You can also perform actions based on the slider value change here
   };
 
   const handleText = (text: string) => {
@@ -52,9 +77,6 @@ export const PageFocus = ({ page }: { page: IPage }) => {
   };
 
   useEffect(() => {
-    if (!page || !drawJSON || !prompt || !useDrawing) {
-      return;
-    }
     console.log("EFFECTING canvas");
     setPrompting(prompt);
     setSelectedMode(useDrawing ? 2 : 1);
@@ -78,7 +100,6 @@ export const PageFocus = ({ page }: { page: IPage }) => {
   const handleSave = () => {
     if (canvasRef.current) {
       console.log("saving");
-      console.log(canvasRef.current.getDataURL());
       const update = {
         ...page,
         name: "Drawn",
@@ -125,8 +146,8 @@ export const PageFocus = ({ page }: { page: IPage }) => {
       <div className="page-focus-header">
         <div className="nav">
           <button onClick={() => handleBack()}>← Prev page</button>
-          <div className="column">
-            <b>page: {currentPage + 1}</b>
+          <div className="">
+            <b>page: {currentPage + 1} </b>
             <button
               className="header-button"
               onClick={() => setFocusView(false)}
@@ -135,6 +156,29 @@ export const PageFocus = ({ page }: { page: IPage }) => {
             </button>
           </div>
           <button onClick={() => handleNext()}>Next page →</button>
+        </div>
+
+        <div className="microphone-wrapper">
+          <div className="microphone-buttons">
+            <button
+              className="microphone-icon-container"
+              ref={microphoneRef}
+              onClick={isListening ? stopHandle : handleListing}
+            >
+              {isListening ? "Save speech" : "Speak your story"}
+            </button>
+            {transcript && (<button className="microphone-reset btn" onClick={handleReset}>
+              Reset speech
+            </button>)}
+            <div className="microphone-status" style={{backgroundColor:`${isListening ? "orange" : "none"}`}}>
+              {isListening ? "Listening........." : "Click to start speaking"}
+            </div>
+          </div>
+          {transcript && (
+            <div className="microphone-result-container">
+              <div className="microphone-result-text">{transcript}</div>
+            </div>
+          )}
         </div>
         <input
           type="text"
@@ -230,6 +274,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
             brushColor={color}
             brushRadius={sliderValue}
             saveData={drawJSON != "" ? drawJSON : empty}
+            // zoomExtents={ {min: 0.3, max: 0.3}} // causes error if set before render, possible solution to responsive sizing
             // loadTimeOffset={3} // requires disabling canvas during playback
             immediateLoading={true}
           />

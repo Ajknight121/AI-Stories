@@ -194,6 +194,8 @@ button {
 }
 .canvas-buttons {
   float: left;
+  display: flex;
+  justify-content: center;
 }
 
 .canvas-buttons > button {
@@ -236,6 +238,10 @@ button {
   height: 100%;
   width: 100%;
   position: absolute;
+}
+
+.slider {
+  width: 150px
 }
 
 .react-canvas {

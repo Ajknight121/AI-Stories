@@ -27,7 +27,7 @@ let body = {
     size: "standard",
   },
   // styling: {
-  //   style: "photo",
+  //   style: "sketch",
   // }
 }
 

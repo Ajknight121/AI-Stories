@@ -45,6 +45,7 @@ export const SiteContext = createContext({
   ] as IPage[],
   currentPage: 0,
   awaiting: false,
+  awaitMsg: "Waiting",
   setFocusView: (bool: boolean) => {
     console.log(bool);
   },
@@ -166,6 +167,15 @@ export default function SiteContextProvider({
   }
 
   async function postPrompt(prompt: string) {
+    if (prompt.length < 3) {
+      setAwaiting(true);
+      console.log("Prompt too short");
+      setAwaitMsg("Prompt too short");
+      await delay(1000); // Wait for 1 second
+      setAwaiting(false);
+      return;
+    }
+    console.log(prompt);
     setAwaiting(true);
     setAwaitMsg("Generating image");
     try {

@@ -136,7 +136,6 @@ export const PageFocus = ({ page }: { page: IPage }) => {
           </div>
           <button onClick={() => handleNext()}>Next page →</button>
         </div>
-        {/* <div className="title">{name}</div> */}
         <input
           type="text"
           value={prompting}
@@ -171,6 +170,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
                   backgroundColor: `${color}`,
                   width: "20px",
                   height: "20px",
+                  margin: "auto",
                 }}
               ></button>
 

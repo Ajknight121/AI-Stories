@@ -1,17 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { IBook, IPage } from "./types";
 
-// export type SiteContextType = {
-//   cursor: {
-//     prevCursorX: number;
-//     prevCursorY: number;
-//     currCursorX: number;
-//     currCursorY: number;
-//     mouseDown: boolean;
-//   };
-//   pages: IPage[];
-//   postPrompt: (userPrompt: string) => Promise<void>;
-// };
 
 export interface Cursor {
   currCursorX: number;
@@ -21,8 +10,25 @@ export interface Cursor {
   mouseDown: boolean;
 }
 
-export const SiteContext = createContext({
-  focusView: false,
+interface ISiteContextValue {
+  cursor: Cursor;
+  pages: IPage[];
+  currentPage: number;
+  currentBook: IBook;
+  focusView: boolean;
+  awaiting: boolean;
+  awaitMsg: string;
+  setFocusView: (bool: boolean) => void;
+  setCurrentPage: (num: number) => void;
+  addPage: () => void;
+  deletePage: (index: number) => void;
+  updateBook: (book: IBook) => void;
+  updatePage: (page: IPage, index: number) => void;
+  postPrompt: (userPrompt: string) => Promise<void>;
+}
+
+// Step 2: Create a default context value object
+const defaultSiteContextValue: ISiteContextValue = {
   cursor: {
     currCursorX: 0,
     currCursorY: 0,
@@ -31,43 +37,35 @@ export const SiteContext = createContext({
     mouseDown: false,
   },
   currentBook: {
-    title: "Book Title",
+    title: "Story Title",
     desc: "No description",
     pages: 0,
   },
+  currentPage: 0,
   pages: [
     {
-      name: "Page Title",
-      prompt: "A viking sits on a large throne",
+      name: "Empty Page",
+      prompt: "",
       image: "",
       position: 1,
+      drawing: "",
+      drawJSON: "",
+      useDrawing: false,
     },
-  ] as IPage[],
-  currentPage: 0,
+  ],
   awaiting: false,
-  awaitMsg: "Waiting",
-  setFocusView: (bool: boolean) => {
-    console.log(bool);
-  },
-  setCurrentPage: (num: number) => {
-    console.log("setCurrentPage ", num);
-  },
-  addPage: () => {
-    console.log("addPage ");
-  },
-  deletePage: (index: number) => {
-    console.log(`Delete page: ${index}`);
-  },
-  updateBook: (book: IBook) => {
-    console.log("updateBook", book);
-  },
-  updatePage: (page: IPage, index: number) => {
-    console.log("updatePage ", page, index);
-  },
-  postPrompt: async (userPrompt: string) => {
-    console.log(`Received prompt: ${userPrompt}`);
-  },
-});
+  awaitMsg: "Please Wait",
+  setFocusView: (bool: boolean) => { },
+  setCurrentPage: (num: number) => { },
+  addPage: () => { },
+  deletePage: (index: number) => { },
+  updateBook: (book: IBook) => { },
+  updatePage: (page: IPage, index: number) => { },
+  postPrompt: async (userPrompt: string) => { },
+  focusView: false
+};
+
+export const SiteContext = createContext(defaultSiteContextValue);
 
 export default function SiteContextProvider({
   children,

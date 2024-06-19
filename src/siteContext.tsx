@@ -279,6 +279,7 @@ export default function SiteContextProvider({
 
       // Check if the deleted page was the last one
       if (updatedPages.length === 0) {
+        console.log("reset");
         const newPos = currentPage + 1;
         const newPage = {
           name: "Empty Page",
@@ -291,8 +292,11 @@ export default function SiteContextProvider({
         };
         updatedPages.push(newPage);
         setCurrentPage(0);
+      } else if (index == 0) {
+        console.log("delete first")
+        setCurrentPage(0);
       } else {
-        console.log("reset");
+        console.log("delete mid")
         setCurrentPage(currentPage - 1);
       }
 

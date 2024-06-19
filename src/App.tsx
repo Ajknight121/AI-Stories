@@ -1,7 +1,7 @@
 import "./App.css";
 import { PagePeek } from "./components/PagePeek";
 import { PageFocus } from "./components/PageFocus";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SiteContext } from "./siteContext";
 import { ComicView } from "./ComicView";
 
@@ -18,6 +18,11 @@ function App() {
   } = useContext(SiteContext);
   const [temptitle, setTempTitle] = useState(currentBook.title);
   const [editTitle, setEditTitle] = useState(false);
+
+  // Use effect to update local state with loaded states
+  useEffect(() => {
+    setTempTitle(currentBook.title)
+  }, [currentBook.title])
 
   const handleEdit = () => {
     if (editTitle) {
@@ -62,7 +67,7 @@ function App() {
       <div className="editor-wrapper">
         <div className="title">
           <input
-            className={`title-name ${editTitle ? "" : "hidden"}`}
+            className={`title-edit ${editTitle ? "" : "hidden"}`}
             value={temptitle}
             onChange={(e) => setTempTitle(e.target.value)}
           />

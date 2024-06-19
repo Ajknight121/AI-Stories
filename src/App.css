@@ -105,7 +105,7 @@ form {
   flex-direction: column;
 }
 
-.title-name {
+.title-edit {
   cursor:initial;
   text-align: center;
   margin:auto;
@@ -223,7 +223,7 @@ button {
   padding: 2px;
 }
 
-.mode {
+.canvas-controls {
   display: flex;
   width: 100%;
   height: 31px;
@@ -232,7 +232,8 @@ button {
   vertical-align: middle;
   background-color: rgb(189, 139, 156);
   border-radius: 10px 0 0 0;
-  padding: 1px;
+  padding: 1px 1px 0 10px;
+  box-sizing: border-box;
 }
 .mode-selectors {
   display: flex;
@@ -281,6 +282,7 @@ button {
   width: 100%;
   height: 70vh;
   background-color: darkgrey;
+  box-sizing: border-box;
 }
 
 canvas {

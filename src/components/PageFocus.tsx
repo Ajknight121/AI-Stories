@@ -170,7 +170,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
             {transcript && (<button className="microphone-reset btn" onClick={handleReset}>
               Reset speech
             </button>)}
-            <div className="microphone-status" style={{backgroundColor:`${isListening ? "orange" : "none"}`}}>
+            <div className="microphone-status" style={{backgroundColor:`${isListening ? "orange" : ""}`}}>
               {isListening ? "Listening........." : "Click to start speaking"}
             </div>
           </div>
@@ -189,7 +189,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
         />
       </div>
       <div className="page">
-        <div className="mode">
+        <div className="canvas-controls">
           {selectedMode == 1 ? (
             <form onSubmit={handlePromptSubmit}>
               <input

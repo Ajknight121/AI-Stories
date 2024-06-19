@@ -115,9 +115,10 @@ export default function SiteContextProvider({
     const bookJSON = localStorage.getItem("book");
     if (bookJSON != null || bookJSON == "{}") {
       console.log("loading local save");
-      const book = JSON.parse(bookJSON);
-      setCurrentBook(book.meta);
-      setPages(book.pages);
+      const savedBook = JSON.parse(bookJSON);
+      setCurrentBook(savedBook.meta);
+      console.log(savedBook)
+      setPages(savedBook.pages);
     }
   }
 

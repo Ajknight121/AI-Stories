@@ -210,6 +210,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
                 Change colors
               </button>
               <button
+                onClick={() => setShowColor(!showColor)}
                 style={{
                   backgroundColor: `${color}`,
                   width: "20px",
@@ -231,7 +232,7 @@ export const PageFocus = ({ page }: { page: IPage }) => {
 
               <div
                 className={` ${showColor ? "" : "hidden"}`}
-                style={{ margin: "20px", position: "absolute", zIndex: "1" }}
+                style={{ margin: "40px", position: "absolute", zIndex: "1" }}
               >
                 <SketchPicker color={color} onChange={handleColorChange} />
               </div>
